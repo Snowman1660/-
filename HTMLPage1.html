@@ -1,321 +1,240 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>在线抽签轮盘</title>
+    <style>
+        :root {
+            --size: 480px;
+            --center: #fff;
+            --font: #222
+        }
+
+        body {
+            font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            color: var(--font)
+        }
+
+        .container {
+            display: flex;
+            gap: 32px;
+            align-items: center
+        }
+
+        .wheel-wrap {
+            width: var(--size);
+            height: var(--size);
+            position: relative
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12)
+        }
+
+        .slice {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-origin: 0 0;
+            width: 50%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 12px;
+            box-sizing: border-box
+        }
+
+        .slice span {
+            transform: rotate(0deg);
+            display: block;
+            font-weight: 600;
+            color: #000;
+            text-shadow: none
+        }
+
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 36%;
+            height: 36%;
+            border-radius: 50%;
+            background: var(--center);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08)
+        }
+
+        .center button {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 0;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .pointer {
+            position: absolute;
+            left: 50%;
+            top: -12px;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 18px solid #ef4444
+        }
+
+        .info {
+            max-width: 280px
+        }
+
+        .names-list {
+            background: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            margin-bottom: 12px
+        }
+
+        .result {
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px
+        }
+
+        .controls button {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 0;
+            background: #10b981;
+            color: #fff;
+            cursor: pointer
+        }
+
+        small {
+            color: #6b7280
+        }
+    </style>
 </head>
 <body>
-    <!doctype html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>抽签轮盘</title>
-        <style>
-            :root {
-                --size: 480px;
-                --center: #fff;
-                --font: #222
-            }
-
-            body {
-                font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-                margin: 0;
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #f3f4f6;
-                color: var(--font)
-            }
-
-            .container {
-                display: flex;
-                gap: 32px;
-                align-items: center
-            }
-
-            .wheel-wrap {
-                width: var(--size);
-                height: var(--size);
-                position: relative
-            }
-
-            .wheel {
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                overflow: hidden;
-                position: relative;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.12)
-            }
-
-            .slice {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform-origin: 0 0;
-                width: 50%;
-                height: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                padding-left: 12px;
-                box-sizing: border-box
-            }
-
-                .slice span {
-                    transform: rotate(0deg);
-                    display: block;
-                    font-weight: 600;
-                    color: #000;
-                    text-shadow: none
-                }
-
-            .center {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%,-50%);
-                width: 36%;
-                height: 36%;
-                border-radius: 50%;
-                background: var(--center);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                box-shadow: 0 6px 20px rgba(0,0,0,0.08)
-            }
-
-                .center button {
-                    padding: 10px 18px;
-                    border-radius: 8px;
-                    border: 0;
-                    background: #2563eb;
-                    color: #fff;
-                    font-weight: 700;
-                    cursor: pointer
-                }
-
-            .pointer {
-                position: absolute;
-                left: 50%;
-                top: -12px;
-                transform: translateX(-50%);
-                width: 0;
-                height: 0;
-                border-left: 12px solid transparent;
-                border-right: 12px solid transparent;
-                border-bottom: 18px solid #ef4444
-            }
-
-            .info {
-                max-width: 280px
-            }
-
-            .names-list {
-                background: #fff;
-                padding: 12px;
-                border-radius: 8px;
-                box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-                margin-bottom: 12px
-            }
-
-            .result {
-                font-size: 18px;
-                font-weight: 700;
-                padding: 12px
-            }
-
-            input[type="text"] {
-                width: 100%;
-                padding: 8px;
-                margin-bottom: 6px;
-                border-radius: 6px;
-                border: 1px solid #d1d5db
-            }
-
-            .controls {
-                display: flex;
-                gap: 8px
-            }
-
-                .controls button {
-                    flex: 1;
-                    padding: 8px;
-                    border-radius: 8px;
-                    border: 0;
-                    background: #10b981;
-                    color: #fff;
-                    cursor: pointer
-                }
-
-            small {
-                color: #6b7280
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="wheel-wrap">
-                <div class="pointer" title="pointer"></div>
-                <div id="wheel" class="wheel" style="transition: transform 4s cubic-bezier(.17,.67,.34,1);">
-                    <!-- slices inserted by JS -->
+    <div class="container">
+        <div class="wheel-wrap">
+            <div class="pointer" title="pointer"></div>
+            <div id="wheel" class="wheel" style="transition: transform 4s cubic-bezier(.17,.67,.34,1);">
                 </div>
-                <div class="center">
-                    <div id="winnerLabel" style="font-size:14px;color:#374151">准备就绪</div>
-                    <button id="spinBtn">Spin</button>
-                </div>
-            </div>
-
-            <div class="info">
-                <div class="names-list">
-                    <div><strong>参与者（最少 2 人）</strong></div>
-                    <div id="inputs"></div>
-                    <div style="display:flex;gap:8px;margin-top:8px">
-                        <button id="addBtn" style="flex:1;padding:8px;border-radius:8px;border:0;background:#3b82f6;color:white;cursor:pointer">新增</button>
-                        <button id="resetBtn" style="flex:1;padding:8px;border-radius:8px;border:0;background:#ef4444;color:white;cursor:pointer">重置为默认</button>
-                    </div>
-                    <small>编辑名字后会实时更新转盘</small>
-                </div>
-
-                <div class="result" id="result">当前未抽取</div>
+            <div class="center">
+                <div id="winnerLabel" style="font-size:14px;color:#374151">准备就绪</div>
+                <button id="spinBtn">Spin</button>
             </div>
         </div>
 
-        <script>
-(function(){
-  const defaultNames = ["韩丁", "李继翔", "杜伊凡", "张哲", "路晨"];
-  let names = defaultNames.slice();
+        <div class="info">
+            <div class="names-list">
+                <div><strong>参与者（最少 2 人）</strong></div>
+                <div id="inputs"></div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <button id="addBtn" style="flex:1;padding:8px;border-radius:8px;border:0;background:#3b82f6;color:white;cursor:pointer">新增</button>
+                    <button id="resetBtn" style="flex:1;padding:8px;border-radius:8px;border:0;background:#ef4444;color:white;cursor:pointer">重置为默认</button>
+                </div>
+                <small>编辑名字后会实时更新转盘</small>
+            </div>
 
-  const wheel = document.getElementById('wheel');
-  const inputsDiv = document.getElementById('inputs');
-  const spinBtn = document.getElementById('spinBtn');
-  const addBtn = document.getElementById('addBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const resultDiv = document.getElementById('result');
-  const winnerLabel = document.getElementById('winnerLabel');
+            <div class="result" id="result">当前未抽取</div>
+        </div>
+    </div>
 
-  let spinCount = 0; // 记录抽签次数，首次固定为韩丁
+    <script>
+    (function(){
+      const defaultNames = ["韩丁", "李继翔", "杜伊凡", "张哲", "路晨"];
+      let names = defaultNames.slice();
 
-  function renderInputs(){
-    inputsDiv.innerHTML = '';
-    names.forEach((n,i)=>{
-      const wrapper = document.createElement('div');
-      wrapper.style.display='flex'; wrapper.style.gap='6px'; wrapper.style.marginTop='6px';
-      const input = document.createElement('input');
-      input.type='text'; input.value=n; input.dataset.idx=i;
-      input.oninput = e => { names[e.target.dataset.idx]=e.target.value || '—'; renderWheel(); }
-      const del = document.createElement('button');
-      del.textContent='删'; del.style.background='#ef4444'; del.style.color='#fff'; del.style.border=0; del.style.borderRadius='6px'; del.style.padding='6px';
-      del.onclick = ()=>{ if(names.length>2){ names.splice(i,1); renderInputs(); renderWheel(); } };
-      wrapper.appendChild(input); wrapper.appendChild(del);
-      inputsDiv.appendChild(wrapper);
-    });
-  }
+      const wheel = document.getElementById('wheel');
+      const inputsDiv = document.getElementById('inputs');
+      const spinBtn = document.getElementById('spinBtn');
+      const addBtn = document.getElementById('addBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const resultDiv = document.getElementById('result');
+      const winnerLabel = document.getElementById('winnerLabel');
 
-  function renderWheel(){
-    wheel.innerHTML='';
-    const n = names.length;
-    const angle = 360 / n;
-    // 灰色扇区
-    const grayShades = ['#d9d9d9', '#c4c4c4', '#b0b0b0', '#9c9c9c', '#888888', '#a8a8a8', '#bfbfbf', '#cccccc', '#dbdbdb'];
-    names.forEach((name,i)=>{
-      const slice = document.createElement('div');
-      const rotate = i*angle;
-      slice.className = 'slice';
-      slice.style.transform = `rotate(${rotate}deg) translate(-50%,-50%)`;
-      slice.style.background = grayShades[i % grayShades.length];
-      slice.style.width = '50%';
-      slice.style.height = '50%';
-      slice.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%)`;
-      const label = document.createElement('span');
-      label.style.transform = `rotate(${angle/2}deg)`;
-      label.textContent = name;
-      label.style.fontSize = Math.max(12, 20 - Math.floor(n/2)) + 'px';
-      label.style.color = '#000'; // 黑色名字
-      slice.appendChild(label);
+      let spinCount = 0; // 记录抽签次数，首次固定为韩丁
 
-      // Create wedge shape using an inner rotated element
-      const wedge = document.createElement('div');
-      wedge.style.position='absolute';
-      wedge.style.left='0'; wedge.style.top='0';
-      wedge.style.width='200%'; wedge.style.height='200%';
-      wedge.style.transformOrigin='0 0';
-      wedge.style.transform = `rotate(${angle}deg)`;
-      wedge.style.background = 'transparent';
-      slice.appendChild(wedge);
+      function renderInputs(){
+        inputsDiv.innerHTML = '';
+        names.forEach((n,i)=>{
+          const wrapper = document.createElement('div');
+          wrapper.style.display='flex'; wrapper.style.gap='6px'; wrapper.style.marginTop='6px';
+          const input = document.createElement('input');
+          input.type='text'; input.value=n; input.dataset.idx=i;
+          input.oninput = e => { names[e.target.dataset.idx]=e.target.value || '—'; renderWheel(); }
+          const del = document.createElement('button');
+          del.textContent='删'; del.style.background='#ef4444'; del.style.color='#fff'; del.style.border=0; del.style.borderRadius='6px'; del.style.padding='6px';
+          del.onclick = ()=>{ if(names.length>2){ names.splice(i,1); renderInputs(); renderWheel(); } };
+          wrapper.appendChild(input); wrapper.appendChild(del);
+          inputsDiv.appendChild(wrapper);
+        });
+      }
 
-      wheel.appendChild(slice);
-    });
-  }
+      function renderWheel(){
+        wheel.innerHTML='';
+        const n = names.length;
+        const angle = 360 / n;
+        // 灰色扇区
+        const grayShades = ['#d9d9d9', '#c4c4c4', '#b0b0b0', '#9c9c9c', '#888888', '#a8a8a8', '#bfbfbf', '#cccccc', '#dbdbdb'];
+        names.forEach((name,i)=>{
+          const slice = document.createElement('div');
+          const rotate = i*angle;
+          slice.className = 'slice';
+          slice.style.transform = `rotate(${rotate}deg) translate(-50%,-50%)`;
+          slice.style.background = grayShades[i % grayShades.length];
+          slice.style.width = '50%';
+          slice.style.height = '50%';
+          slice.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%)`;
+          const label = document.createElement('span');
+          label.style.transform = `rotate(${angle/2}deg)`;
+          label.textContent = name;
+          label.style.fontSize = Math.max(12, 20 - Math.floor(n/2)) + 'px';
+          label.style.color = '#000'; // 黑色名字
+          slice.appendChild(label);
 
-  // 抽签逻辑：首次必定韩丁，后续随机
-  let spinning = false;
-  spinBtn.addEventListener('click', ()=>{
-    if(spinning) return;
-    if(names.length < 2){ alert('请至少输入 2 位参与者'); return; }
-    spinning = true;
-    resultDiv.textContent = '抽签中...';
-    winnerLabel.textContent = '转动中';
-    spinBtn.disabled = true;
-
-    // 选择中奖者：首次固定为韩丁（索引0），后续随机
-    let winnerIndex;
-    if (spinCount === 0) {
-      winnerIndex = 0; // 首次必定韩丁
-    } else {
-      winnerIndex = Math.floor(Math.random() * names.length);
-    }
-    spinCount++;
-
-    // 计算旋转角度
-    const n = names.length;
-    const anglePer = 360 / n;
-    const centerAngle = (winnerIndex + 0.5) * anglePer;
-
-    const extraSpins = Math.floor(Math.random()*3) + 4;
-    const finalRotation = extraSpins*360 + (360 - centerAngle) + (Math.random()*anglePer - anglePer/2) * 0.05;
-
-    const duration = 4 + Math.random()*2;
-    wheel.style.transition = `transform ${duration}s cubic-bezier(.17,.67,.34,1)`;
-    wheel.style.transform = `rotate(${finalRotation}deg)`;
-
-    // 动画结束后显示结果
-    wheel.addEventListener('transitionend', function onEnd(){
-      wheel.removeEventListener('transitionend', onEnd);
-      spinning = false;
-      spinBtn.disabled = false;
-      const winner = names[winnerIndex];
-      resultDiv.textContent = `中奖者：${winner}`;
-      winnerLabel.textContent = winner;
-      // 规范化旋转角度
-      const normalized = finalRotation % 360;
-      wheel.style.transition = 'none';
-      wheel.style.transform = `rotate(${normalized}deg)`;
-      void wheel.offsetWidth;
-    });
-  });
-
-  addBtn.addEventListener('click', ()=>{
-    names.push('新名字');
-    renderInputs(); renderWheel();
-  });
-  resetBtn.addEventListener('click', ()=>{
-    names = defaultNames.slice();
-    spinCount = 0; // 重置后首次仍为韩丁
-    renderInputs(); renderWheel();
-  });
-
-  // init
-  renderInputs();
-  renderWheel();
-
-})();
-        </script>
-    </body>
-</html>
-</body>
-</html>
+          // Create wedge shape using an inner rotated element
+          const wedge = document.createElement('div');
+          wedge.style.position='absolute';
+          wedge.style.left='0'; wedge.style.top='0';
+          wedge.style.width='200%'; wedge.style.height='200%';
+          wedge.style.transformOrigin='0 0';
+          wedge.style.transform = `rotate(${angle}deg)`;
+          wedge.style.background = 'transparent';
+          slice
